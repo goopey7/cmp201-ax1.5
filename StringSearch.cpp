@@ -18,16 +18,10 @@ void badCharHeur(std::string pattern, int length, int in_pattern[ALPHABET_SIZE])
 	// Assessed [1]: Information is provided in lecture 7B
 
 	// set all elements to -1
-	for(int i=0; i < ALPHABET_SIZE; i++)
-	{
-		in_pattern[i] = -1;
-	}
+	for(int i=0; i < ALPHABET_SIZE; i++)in_pattern[i] = -1;
 
 	// set pattern char positions inside of in_pattern
-	for(int i=0; i < length; i++)
-	{
-		in_pattern[pattern[i]] = i;
-	}
+	for(int i=0; i < length; i++)in_pattern[pattern[i]] = i;
 }
 
 /*
@@ -120,8 +114,8 @@ int main()
 	}
 	
 	// TEST BMH
-	std::string text = "there was once a fox called foxxy mcfox in a little fox house for foxes";
-	std::string pattern = "fox";
+	std::string text = "there was once a foxx called foxxy mcfox in a little foxx house for foxxes";
+	std::string pattern = "foxx";
 	std::vector<int> r = BMH(text, pattern);
 	std::cout << "\n\n### TEST 2\nTesting BMH algorithm with the following:\ntext: " << text << "\npattern: " << pattern << "\nexpecting: 17, 28, 36, 52 and 66\n";
 	for (int res : r)
