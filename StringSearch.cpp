@@ -49,9 +49,7 @@ std::vector<int> BMH(std::string text, std::string pattern)
 		// check out my rad for loop
 		for(;
 			unmatchedChars > 0 && pattern[unmatchedChars] == text[shiftPos + unmatchedChars];
-			unmatchedChars--)
-		{
-		}
+			unmatchedChars--){}
 
 		if(unmatchedChars == 0)
 		{
@@ -80,9 +78,31 @@ std::vector<int> BMH(std::string text, std::string pattern)
 * INPUT: pattern as string, length of pattern as in, pointer to array to be used as LPS structure.
 * For each character in the pattern, fill the LPS structure with the length of the longest proper prefix-suffix,
 */
-void computeLPS(std::string pat, int M, int* lps)
+void computeLPS(std::string pat, int patSize, int* lps)
 {
 	// UNASSESSED: Information is provided in lecture 7C
+
+	int len = 0;
+	lps[0] = 0;
+	int i = 1;
+	while (i < patSize)
+	{
+		if (pat[i] == pat[len])
+		{
+			len++;
+			lps[i] = len;
+			i++;
+		}
+		else
+		{
+			if (len != 0) len = lps[len - 1];
+			else
+			{
+				lps[i] = 0;
+				i++;
+			}
+		}
+	}
 }
 
 /*
@@ -93,7 +113,41 @@ void computeLPS(std::string pat, int M, int* lps)
 std::vector<int> KMP(std::string text, std::string pattern)
 {
 	// ASSESSED [2]: Information is provided in lecture 7C
-	return std::vector<int>();
+	std::vector<int> results;
+	int* lps = new int[pattern.length()];
+	computeLPS(pattern,pattern.length(),lps);
+
+	int i=0,j=0;
+
+	bool wtfIsGoingOn = i < text.length();
+	int textLenght = text.length();
+
+	while(j < pattern.length() && i < text.length())
+	{
+		if(text[i] == pattern[j])
+		{
+			i++;
+			j++;
+			if(j == pattern.length())
+			{
+				results.push_back(i-j);
+				j = lps[j-1];
+			}
+		}
+		else
+		{
+			if(j > 0)
+			{
+				j = lps[j-1];
+			}
+			else
+			{
+				i++;
+			}
+		}
+	}
+
+	return results;
 }
 
 
@@ -114,8 +168,8 @@ int main()
 	}
 	
 	// TEST BMH
-	std::string text = "there was once a foxx called foxxy mcfox in a little foxx house for foxxes";
-	std::string pattern = "foxx";
+	std::string text = "there was once a fox called foxxy mcfox in a little fox house for foxes";
+	std::string pattern = "fox";
 	std::vector<int> r = BMH(text, pattern);
 	std::cout << "\n\n### TEST 2\nTesting BMH algorithm with the following:\ntext: " << text << "\npattern: " << pattern << "\nexpecting: 17, 28, 36, 52 and 66\n";
 	for (int res : r)
